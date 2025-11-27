@@ -9,86 +9,33 @@
             background: #0a1f44;
             color: white;
             text-align: center;
-            padding: 40px;
+            margin: 0;
+            padding: 30px;
         }
-        .container {
-            max-width: 400px;
+
+        h1 { margin-bottom: 20px; }
+
+        .box {
+            max-width: 450px;
             margin: auto;
             background: #133b7c;
             padding: 25px;
             border-radius: 15px;
         }
+
         button {
             padding: 15px 25px;
+            margin-top: 15px;
             font-size: 18px;
-            font-weight: bold;
             border: none;
-            background: #2ecc71;
-            color: black;
             border-radius: 10px;
             cursor: pointer;
+            font-weight: bold;
+            background: #2ecc71;
+            color: black;
         }
+
         button:disabled {
-            background: gray;
-            color: #222;
-        }
-        .warning {
-            background: #e74c3c;
-            padding: 12px;
-            margin-top: 15px;
-            border-radius: 10px;
-        }
-        .success {
-            background: #27ae60;
-            padding: 12px;
-            margin-top: 15px;
-            border-radius: 10px;
-        }
-    </style>
-</head>
-<body>
+            backgrou
 
-    <h1>🌟 30 Ngày Thay Đổi Bản Thân 🌟</h1>
-
-    <div class="container">
-        <h2 id="today"></h2>
-        <button id="btn">Hoàn thành hôm nay ✔</button>
-        <div id="msg"></div>
-    </div>
-
-    <script>
-        function getToday() {
-            const d = new Date();
-            return d.getFullYear() + "-" + (d.getMonth()+1) + "-" + d.getDate();
-        }
-
-        const today = getToday();
-        const lastDone = localStorage.getItem("lastDone");
-
-        const todayText = document.getElementById("today");
-        const btn = document.getElementById("btn");
-        const msg = document.getElementById("msg");
-
-        todayText.innerText = "Hôm nay: " + today;
-
-        // Nếu hôm nay đã làm rồi
-        if (lastDone === today) {
-            btn.disabled = true;
-            msg.innerHTML = "<div class='success'>Bạn đã hoàn thành hôm nay!</div>";
-        }
-
-        // Nếu có dữ liệu cũ và gần nhất không phải hôm nay → bạn đã bỏ lỡ
-        else if (lastDone && lastDone !== today) {
-            msg.innerHTML = "<div class='warning'>⚠ Bạn chưa hoàn thành ngày hôm qua!</div>";
-        }
-
-        // Khi bấm nút hoàn thành
-        btn.addEventListener("click", () => {
-            localStorage.setItem("lastDone", today);
-            btn.disabled = true;
-            msg.innerHTML = "<div class='success'>Bạn đã hoàn thành hôm nay!</div>";
-        });
-    </script>
-
-</body>
 </html>
