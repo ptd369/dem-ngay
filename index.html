@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>30 Ngày Thay Đổi Bản Thân</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #0a1f44;
+            color: white;
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 { margin-bottom: 10px; }
+
+        .day-list {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 15px;
+            padding: 20px;
+            max-width: 700px;
+            margin: auto;
+        }
+
+        .day {
+            background: #133b7c;
+            padding: 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 20px;
+            user-select: none;
+        }
+
+        .day:hover {
+            background: #1a4f9a;
+        }
+
+        .done {
+            background: #2ecc71 !important;
+            color: black;
+            font-weight: bold;
+        }
+
+        .reset-btn {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 18px;
+            border: none;
+            background: #e74c3c;
+            color: white;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>🌟 30 Ngày Thay Đổi Bản Thân 🌟</h1>
+    <p>Hãy nhấn vào từng ngày khi bạn hoàn thành!</p>
+
+    <div class="day-list" id="dayList"></div>
+
+    <button class="reset-btn" onclick="resetAll()">Reset toàn bộ</button>
+
+    <script>
+        const dayList = document.getElementById("dayList");
+
+        // Tạo 30 ô ngày
+        for (let i = 1; i <= 30; i++) {
+            const day = document.createElement("div");
+            day.className = "day";
+            day.innerText = "Ngày " + i;
+
+            // Nếu đã lưu trạng thái
+            if (localStorage.getItem("day" + i) === "done") {
+                day.classList.add("done");
+            }
+
+            day.addEventListener("click", () => {
+                day.classList.toggle("done");
+
+                if (day.classList.contains("done")) {
+                    localStorage.setItem("day" + i, "done");
+                } else {
+                    localStorage.removeItem("day" + i);
+                }
+            });
+
+            dayList.appendChild(day);
+        }
+
+        function resetAll() {
+            if (confirm("Bạn chắc chắn muốn reset toàn bộ tiến trình?")) {
+                localStorage.clear();
+                location.reload();
+            }
+        }
+    </script>
+
+</body>
+</html>
