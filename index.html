@@ -5,11 +5,29 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>30 Ngày Thay Đổi Bản Thân</title>
 <style>
-body { font-family: Arial; margin:0; padding:20px; background:var(--bg); color:var(--text);} 
+body {
+  font-family: 'Segoe UI', Arial;
+  margin:0;
+  padding:20px;
+  background:var(--bg);
+  color:var(--text);
+  transition:0.3s;
+} 
 :root { --bg:#fff; --text:#000; --accent:#4caf50;} 
 .dark { --bg:#121212; --text:#fff; --accent:#81c784;} 
 .task-list {max-width:350px; margin:auto; display:flex; flex-direction:column; gap:10px;} 
-.task {padding:12px; border-radius:8px; background:rgba(0,0,0,0.15); cursor:pointer;} 
+.task {
+  padding:14px;
+  border-radius:10px;
+  background:rgba(0,0,0,0.08);
+  backdrop-filter: blur(4px);
+  cursor:pointer;
+  transition:0.25s;
+}
+.task:hover{
+  transform:scale(1.03);
+  background:rgba(0,0,0,0.15);
+} 
 .task.completed {background:var(--accent); color:white;} 
 textarea {width:90%; margin:15px auto; display:block; padding:10px; border-radius:6px;} 
 h3 { margin-top:25px; text-align:center; }
@@ -30,13 +48,26 @@ h3 { margin-top:25px; text-align:center; }
   border-radius: 4px;
 }
 .progress-box.done {
-  background: var(--accent);
+  background: linear-gradient(135deg, #4caf50, #81c784);
+  box-shadow: 0 0 6px rgba(0,0,0,0.2);
 }
+</style>
+<style>
+.container { display:flex; gap:20px; }
+.left, .right { flex:1; }
+.right textarea{height:300px;}
 </style>
 </head>
 <body>
+<div class="container">
+<div class="left">
 <button class="toggle-mode">🌙</button>
-<h1>🌟 30 Ngày Thay Đổi Bản Thân 🌟</h1>
+<h1{
+  text-align:center;
+  margin-bottom:20px;
+  font-weight:700;
+  letter-spacing:1px;
+}>🌟 30 Ngày Thay Đổi Bản Thân 🌟</h1>
 
 <div id="date"></div>
 <div id="countdown"></div>
@@ -49,6 +80,8 @@ h3 { margin-top:25px; text-align:center; }
 
 <h3 id="doneMessage" style="color:var(--accent);"></h3>
 
+</div>
+<div class="right">
 <h3>📝 Kế hoạch chi tiết hôm nay</h3>
 <textarea id="planBox"></textarea>
 
@@ -166,5 +199,6 @@ toggleBtn.onclick=()=>{
  localStorage.setItem("theme",document.body.classList.contains("dark")?"dark":"light");
 };
 </script>
+</div>
 </body>
 </html>
