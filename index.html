@@ -12,27 +12,47 @@ body { font-family: Arial; margin:0; padding:20px; background:var(--bg); color:v
 .task {padding:12px; border-radius:8px; background:rgba(0,0,0,0.15); cursor:pointer;} 
 .task.completed {background:var(--accent); color:white;} 
 textarea {width:90%; margin:15px auto; display:block; padding:10px; border-radius:6px;} 
-h3 { margin-top:25px; }
+h3 { margin-top:25px; text-align:center; }
+
+/* Tiến độ dạng ô vuông 5 hàng × 6 cột */
+#progressGrid {
+  display: grid;
+  grid-template-columns: repeat(6, 22px);
+  gap: 8px;
+  justify-content: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+.progress-box {
+  width: 22px;
+  height: 22px;
+  background: #555;
+  border-radius: 4px;
+}
+.progress-box.done {
+  background: var(--accent);
+}
 </style>
 </head>
 <body>
 <button class="toggle-mode">🌙</button>
 <h1>🌟 30 Ngày Thay Đổi Bản Thân 🌟</h1>
-<h2 id="dayTitle"></h2>
+
 <div id="date"></div>
 <div id="countdown"></div>
 
+<!-- Tiến độ 30 ngày -->
+<h3>📊 Tiến độ</h3>
+<div id="progressGrid"></div>
+
 <div class="task-list" id="taskList"></div>
 
-<h3 id="doneMessage" style="text-align:center;color:var(--accent);"></h3>
+<h3 id="doneMessage" style="color:var(--accent);"></h3>
 
 <h3>📝 Kế hoạch chi tiết hôm nay</h3>
 <textarea id="planBox"></textarea>
 
 <script>
-// ==============================
-// INITIALIZE DATA
-// ==============================
 const tasks=["Tập thể dục","Học bài","Uống sữa","Tắt máy tính trước 21:45","Đọc sách"];
 let now=new Date();
 const todayKey=now.toDateString();
@@ -43,47 +63,46 @@ let data=JSON.parse(localStorage.getItem("progressData"))||{
   plans:{},
   lastDate:todayKey
 };
-
 if(!data.history) data.history={};
 if(!data.plans) data.plans={};
 
-// ==============================
-// HANDLE DAY SWITCH
-// ==============================
 if(data.lastDate!==todayKey){
   const last=new Date(data.lastDate);
   const diff=(now-last)/86400000;
-
   if(diff>=1 && !data.history[data.lastDate]){
     alert("😢 Bạn đã thất bại! Reset lại ngày 1.");
     data.day=1;
     data.history={};
     data.plans={};
   }
-
   data.lastDate=todayKey;
   localStorage.setItem("progressData",JSON.stringify(data));
 }
 
-// ==============================
-// RENDER BASIC INFO
-// ==============================
-document.getElementById("dayTitle").innerText=`Ngày ${data.day}/30`;
+
 document.getElementById("date").innerText=now.toLocaleDateString("vi-VN");
 
+loadProgressGrid();
 loadTasks();
 checkDailyCompletion();
 loadPlans();
 countdown();
 
-// ==============================
-// LOAD TASKS
-// ==============================
+function loadProgressGrid(){
+  const grid=document.getElementById("progressGrid");
+  grid.innerHTML="";
+  for(let i=1;i<=30;i++){
+    const box=document.createElement("div");
+    box.className="progress-box";
+    if(i < data.day) box.classList.add("done");
+    grid.appendChild(box);
+  }
+}
+
 function loadTasks(){
  const list=document.getElementById("taskList"); list.innerHTML="";
  let completed=JSON.parse(localStorage.getItem(todayKey))||[];
  if(!Array.isArray(completed)) completed=[];
-
  tasks.forEach(t=>{
    const div=document.createElement("div");
    div.className="task";
@@ -94,13 +113,9 @@ function loadTasks(){
  });
 }
 
-// ==============================
-// TOGGLE TASK
-// ==============================
 function toggle(task,el){
  let completed=JSON.parse(localStorage.getItem(todayKey))||[];
  if(!Array.isArray(completed)) completed=[];
-
  if(completed.includes(task)){
    completed=completed.filter(x=>x!==task);
    el.classList.remove("completed");
@@ -109,33 +124,23 @@ function toggle(task,el){
    el.classList.add("completed");
  }
  localStorage.setItem(todayKey,JSON.stringify(completed));
-
  checkDailyCompletion();
-
  if(completed.length===tasks.length && !data.history[todayKey]){
    data.history[todayKey]=`Hoàn thành ngày ${data.day}`;
    data.day++;
    localStorage.setItem("progressData",JSON.stringify(data));
+   loadProgressGrid();
  }
 }
 
-// ==============================
-// DAILY COMPLETION CHECK
-// ==============================
 function checkDailyCompletion(){
   let completed=JSON.parse(localStorage.getItem(todayKey))||[];
   const msgEl=document.getElementById("doneMessage");
-
   if(completed.length===tasks.length){
     msgEl.innerText="🎉 Bạn đã hoàn thành mục tiêu hôm nay!";
-  } else {
-    msgEl.innerText="";
-  }
+  } else msgEl.innerText="";
 }
 
-// ==============================
-// PLANS
-// ==============================
 function loadPlans(){
  const box=document.getElementById("planBox");
  box.value=data.plans[todayKey]||"";
@@ -145,9 +150,6 @@ function loadPlans(){
  };
 }
 
-// ==============================
-// COUNTDOWN
-// ==============================
 function countdown(){
  const n=new Date();
  const midnight=new Date(); midnight.setHours(24,0,0,0);
@@ -157,9 +159,6 @@ function countdown(){
  setTimeout(countdown,1000);
 }
 
-// ==============================
-// DARK MODE
-// ==============================
 const toggleBtn=document.querySelector(".toggle-mode");
 if(localStorage.getItem("theme")==="dark") document.body.classList.add("dark");
 toggleBtn.onclick=()=>{
